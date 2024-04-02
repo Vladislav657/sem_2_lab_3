@@ -6,9 +6,11 @@ using namespace std;
 #define LAB_3_FRACTION_H
 
 class Fraction{
+private:
     int numerator;
     unsigned denominator;
 
+public:
     Fraction();
 
     Fraction(int numerator, unsigned denominator);
@@ -21,41 +23,41 @@ class Fraction{
 
     friend ostream& operator << (ostream& out, Fraction& fraction);
 
-    Fraction& operator + (Fraction& other);
+    Fraction operator + (Fraction& other) const;
 
-    Fraction& operator - (Fraction& other);
+    Fraction operator - (Fraction& other) const;
 
-    Fraction& operator * (Fraction& other);
+    Fraction operator * (Fraction& other) const;
 
-    Fraction& operator / (Fraction& other);
+    Fraction operator / (Fraction& other) const;
 
-    Fraction& operator += (Fraction& other);
+    Fraction operator += (Fraction& other);
 
-    Fraction& operator -= (Fraction& other);
+    Fraction operator -= (Fraction& other);
 
-    Fraction& operator *= (Fraction& other);
+    Fraction operator *= (Fraction& other);
 
-    Fraction& operator /= (Fraction& other);
+    Fraction operator /= (Fraction& other);
 
-    bool operator == (Fraction& other);
+    bool operator == (Fraction& other) const;
 
-    bool operator >= (Fraction& other);
+    bool operator >= (Fraction& other) const;
 
-    bool operator <= (Fraction& other);
+    bool operator <= (Fraction& other) const;
 
-    bool operator > (Fraction& other);
+    bool operator > (Fraction& other) const;
 
-    bool operator < (Fraction& other);
+    bool operator < (Fraction& other) const;
 
-    Fraction& operator = (Fraction& other);
+    Fraction operator = (Fraction& other);
 
-    operator double();
+    explicit operator double() const;
 
-    operator float ();
+    explicit operator float () const;
 
-    operator string ();
+    explicit operator string () const;
 
-    friend Fraction& operator ""_f (const char *value);
+    friend Fraction operator ""_F (const char *value);
 };
 
 #endif //LAB_3_FRACTION_H
