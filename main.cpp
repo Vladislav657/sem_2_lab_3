@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
     Fraction f1 = Fraction(2, 3);
-    Fraction f2 = Fraction(1, 5);
+    Fraction f2 = Fraction(-7, 11);
     Fraction f3 = f1;
 
     auto d = (double) f1;

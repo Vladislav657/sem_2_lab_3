@@ -8,12 +8,12 @@ using namespace std;
 class Fraction{
 private:
     int numerator;
-    unsigned denominator;
+    int denominator;
 
 public:
     Fraction();
 
-    Fraction(int numerator, unsigned denominator);
+    Fraction(int numerator, int denominator);
 
     Fraction(Fraction& other);
 
