@@ -40,7 +40,8 @@ istream &operator>>(istream &in, Fraction &fraction) {
 }
 
 ostream &operator<<(ostream &out, Fraction &fraction) {
-    out << fraction.numerator << '/' << fraction.denominator;
+    if (fraction.numerator == 0) out << fraction.numerator;
+    else out << fraction.numerator << '/' << fraction.denominator;
     return out;
 }
 
@@ -152,7 +153,9 @@ bool Fraction::operator < (Fraction &other) const {
 }
 
 Fraction Fraction::operator = (Fraction &other) {
-    return {other.numerator, other.denominator};
+    this->numerator = other.numerator;
+    this->denominator = other.denominator;
+    return *this;
 }
 
 Fraction::operator double() const {
@@ -167,7 +170,7 @@ Fraction::operator string() const {
     return to_string(this->numerator) + '/' + to_string(this->denominator);
 }
 
-Fraction operator ""_F(const char *value) {
+Fraction operator ""_F(const char *value, size_t) {
     int n;
     unsigned d;
     sscanf(value, "%d/%u", &n, &d);

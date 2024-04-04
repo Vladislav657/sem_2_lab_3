@@ -57,7 +57,9 @@ public:
 
     explicit operator string () const;
 
-    friend Fraction operator ""_F (const char *value);
+    friend Fraction operator ""_F (const char *value, size_t);
 };
+
+Fraction operator ""_F(const char *value, size_t);
 
 #endif //LAB_3_FRACTION_H
