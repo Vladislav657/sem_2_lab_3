@@ -39,6 +39,8 @@ public:
 
     Fraction operator /= (Fraction& other);
 
+    Fraction operator - () const;
+
     bool operator == (Fraction& other) const;
 
     bool operator >= (Fraction& other) const;
@@ -57,9 +59,9 @@ public:
 
     explicit operator string () const;
 
-    friend Fraction operator ""_F (const char *value, size_t);
+    friend Fraction operator ""_F (const char *value, size_t size);
 };
 
-Fraction operator ""_F(const char *value, size_t);
+Fraction operator ""_F(const char *value, size_t size);
 
 #endif //LAB_3_FRACTION_H

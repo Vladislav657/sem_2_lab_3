@@ -5,9 +5,11 @@ using namespace std;
 
 
 int main(){
-    Fraction f1 = Fraction(2, 3);
+    Fraction f1 = Fraction(10, 15);
     Fraction f2 = Fraction(-7, 11);
-    Fraction f3 = f1;
+    Fraction f3 = -f1;
+
+    cout << f3 << " " << f1 << endl;
 
     auto d = (double) f1;
     auto f = (float) f2;
@@ -24,7 +26,7 @@ int main(){
     bool b = f1 > f2;
     cout << b << " " << f3 << endl;
 
-    Fraction f6 = "9/6"_F;
+    Fraction f6 = "10/-5"_F;
     cout << f6 << endl;
 
     cout << f1 << ' ' << f2 << ' ' << f3 << endl;

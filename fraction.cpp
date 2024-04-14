@@ -16,12 +16,16 @@ Fraction::Fraction() {
 }
 
 Fraction::Fraction(int numerator, int denominator) {
+    int g = gcd(numerator, denominator);
     if (denominator == 0){
         this->numerator = 0;
         this->denominator = 1;
     } else if (denominator < 0){
-        this->numerator = -numerator;
-        this->denominator = -denominator;
+        this->numerator = -numerator / g;
+        this->denominator = -denominator / g;
+    } else{
+        this->numerator = numerator / g;
+        this->denominator = denominator / g;
     }
 }
 
@@ -36,100 +40,77 @@ Fraction::Fraction(Fraction &&other)  noexcept {
 }
 
 istream &operator>>(istream &in, Fraction &fraction) {
-    int n;
-    int d;
+    int n = 0, d = 1;
+    bool flag = false;
     string f;
     in >> f;
     char *frac = new char [f.size()];
-    for (int i = 0; i < f.size(); ++i) frac[i] = f[i];
-    sscanf(frac, "%d/%d", &n, &d);
-    if (d == 0){
+    for (int i = 0; i < f.size(); ++i){
+        frac[i] = f[i];
+        if (f[i] == '/') flag = true;
+    }
+    int c = flag ? sscanf(frac, "%d/%d", &n, &d) : sscanf(frac, "%d", &n);
+    int g = gcd(n, d);
+    if (flag && c != 2 || !flag && c != 1 || d == 0){
         fraction.numerator = 0;
         fraction.denominator = 1;
         return in;
     } else if (d < 0){
-        fraction.numerator = -n;
-        fraction.denominator = -d;
+        fraction.numerator = -n / g;
+        fraction.denominator = -d / g;
+    } else {
+        fraction.numerator = n / g;
+        fraction.denominator = d / g;
     }
-    fraction.numerator = n;
-    fraction.denominator = d;
     return in;
 }
 
 ostream &operator<<(ostream &out, Fraction &fraction) {
-    if (fraction.numerator == 0) out << fraction.numerator;
+    if (fraction.numerator == 0 || fraction.denominator == 1) out << fraction.numerator;
     else out << fraction.numerator << '/' << fraction.denominator;
     return out;
 }
 
 Fraction Fraction::operator + (Fraction &other) const {
-    int n1, n2, d;
-    if (other.denominator % this->denominator == 0){
-        n1 = this->numerator * (other.denominator / this->denominator);
-        n2 = other.numerator;
-        d = other.denominator;
-    } else if (this->denominator % other.denominator == 0){
-        n1 = this->numerator;
-        n2 = other.numerator * (this->denominator / other.denominator);
-        d = this->denominator;
-    } else {
-        n1 = this->numerator * other.denominator;
-        n2 = other.numerator * this->denominator;
-        d = this->denominator * other.denominator;
-    }
-    return {n1 + n2, d};
+    int n1 = this->numerator * other.denominator;
+    int n2 = other.numerator * this->denominator;
+    int d = this->denominator * other.denominator;
+    int g = gcd(n1 + n2, d);
+    return {(n1 + n2) / g, d / g};
 }
 
 Fraction Fraction::operator - (Fraction &other) const {
-    int n1, n2, d;
-    if (other.denominator % this->denominator == 0){
-        n1 = this->numerator * (other.denominator / this->denominator);
-        n2 = other.numerator;
-        d = other.denominator;
-    } else if (this->denominator % other.denominator == 0){
-        n1 = this->numerator;
-        n2 = other.numerator * (this->denominator / other.denominator);
-        d = this->denominator;
-    } else {
-        n1 = this->numerator * other.denominator;
-        n2 = other.numerator * this->denominator;
-        d = this->denominator * other.denominator;
-    }
-    return {n1 - n2, d};
+    int n1 = this->numerator * other.denominator;
+    int n2 = other.numerator * this->denominator;
+    int d = this->denominator * other.denominator;
+    int g = gcd(n1 - n2, d);
+    return {(n1 - n2) / g, d / g};
 }
 
 Fraction Fraction::operator * (Fraction &other) const {
-    return {this->numerator * other.numerator, this->denominator * other.denominator};
+    int n = this->numerator * other.numerator;
+    int d = this->denominator * other.denominator;
+    int g = gcd(n, d);
+    return {n / g, d / g};
 }
 
 Fraction Fraction::operator / (Fraction &other) const {
     int n, d;
     if (other.numerator == 0) return {0, 1};
     else if (other.numerator < 0) {
+        n = this->numerator * -other.denominator;
+        d = this->denominator * -other.numerator;
+    } else {
         n = this->numerator * other.denominator;
         d = this->denominator * other.numerator;
-        int g = gcd(n, d);
-        n = -n / g;
-        d = -d / g;
     }
-    n = this->numerator * other.denominator;
-    d = this->denominator * other.numerator;
     int g = gcd(n, d);
-    n = n / g;
-    d = d / g;
-    return {n, d};
+    return {n / g, d / g};
 }
 
 Fraction Fraction::operator += (Fraction &other) {
-    if (other.denominator % this->denominator == 0){
-        this->numerator = this->numerator * (other.denominator / this->denominator) + other.numerator;
-        this->denominator = other.denominator;
-    } else if (this->denominator % other.denominator == 0){
-        this->numerator = this->numerator + other.numerator * (this->denominator / other.denominator);
-    } else {
-        this->numerator = this->numerator * other.denominator + other.numerator * this->denominator;
-        this->denominator = this->denominator * other.denominator;
-    }
+    this->numerator = this->numerator * other.denominator + other.numerator * this->denominator;
+    this->denominator = this->denominator * other.denominator;
     int g = gcd(this->numerator, this->denominator);
     this->numerator /= g;
     this->denominator /= g;
@@ -137,15 +118,8 @@ Fraction Fraction::operator += (Fraction &other) {
 }
 
 Fraction Fraction::operator -= (Fraction &other) {
-    if (other.denominator % this->denominator == 0){
-        this->numerator = this->numerator * (other.denominator / this->denominator) - other.numerator;
-        this->denominator = other.denominator;
-    } else if (this->denominator % other.denominator == 0){
-        this->numerator = this->numerator - other.numerator * (this->denominator / other.denominator);
-    } else {
-        this->numerator = this->numerator * other.denominator - other.numerator * this->denominator;
-        this->denominator = this->denominator * other.denominator;
-    }
+    this->numerator = this->numerator * other.denominator - other.numerator * this->denominator;
+    this->denominator = this->denominator * other.denominator;
     int g = gcd(this->numerator, this->denominator);
     this->numerator /= g;
     this->denominator /= g;
@@ -174,6 +148,10 @@ Fraction Fraction::operator/=(Fraction &other) {
     this->numerator /= g;
     this->denominator /= g;
     return *this;
+}
+
+Fraction Fraction::operator-() const {
+    return {-this->numerator, this->denominator};
 }
 
 bool Fraction::operator == (Fraction &other) const {
@@ -211,14 +189,17 @@ Fraction::operator float() const {
 }
 
 Fraction::operator string() const {
+    if (this->numerator == 0 || this->denominator == 1) return to_string(this->numerator);
     return to_string(this->numerator) + '/' + to_string(this->denominator);
 }
 
-Fraction operator ""_F(const char *value, size_t) {
-    int n, d;
-    sscanf(value, "%d/%d", &n, &d);
-    if (d == 0) return {0, 1};
-    else if (d < 0) return {-n, -d};
+Fraction operator ""_F(const char *value, size_t size) {
+    int n = 0, d = 1;
+    bool flag = false;
+    for (int i = 0; i < size; ++i) if (value[i] == '/') flag = true;
+    int c = flag ? sscanf(value, "%d/%d", &n, &d) : sscanf(value, "%d", &n);
     int g = gcd(n, d);
+    if (flag && c != 2 || !flag && c != 1 || d == 0) return {0, 1};
+    else if (d < 0) return {-n / g, -d / g};
     return {n / g, d / g};
 }
