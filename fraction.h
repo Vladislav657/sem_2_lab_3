@@ -51,7 +51,7 @@ public:
 
     bool operator < (Fraction& other) const;
 
-    Fraction operator = (Fraction& other);
+    Fraction& operator = (Fraction&& other) noexcept ;
 
     explicit operator double() const;
 

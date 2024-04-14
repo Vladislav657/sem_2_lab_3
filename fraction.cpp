@@ -174,7 +174,7 @@ bool Fraction::operator < (Fraction &other) const {
     return (long double) this->numerator / this->denominator < (long double) other.numerator / other.denominator;
 }
 
-Fraction Fraction::operator = (Fraction &other) {
+Fraction& Fraction::operator = (Fraction &&other)  noexcept {
     this->numerator = other.numerator;
     this->denominator = other.denominator;
     return *this;
